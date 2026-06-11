@@ -6,11 +6,14 @@ The package root device is `process-outbox@1.0`. It appends outbound messages to
 `results/outbox`, forwards `x-` request keys into notices, and can fan out
 notifications to subscribers registered by action and target.
 
-## Specification
+## published package
 
-`SPEC.md` is the package-level device contract.
+```
+device publish: process-outbox@1.0 
+spec=JrNExiF73kCs6hCyxLXB8BmPzegJUAsO5BBKaHxI3hQ impl=IgFctN6dNiwIoQrONi__4trJ70bkamBXXp9ipyW3SQI
+```
 
-## Build And Verify
+## build
 
 ```sh
 rebar3 compile
@@ -18,16 +21,10 @@ rebar3 device verify
 rebar3 device package
 ```
 
-`rebar3 device package` emits a signed archive for `process-outbox@1.0`.
 
-## Test
+## test
 
 ```sh
 HB_PORT=0 rebar3 device test
 rebar3 eunit-all
 ```
-
-The package-specific vectors live in
-`src/preloaded/test/hb_process_outbox_test_vectors.erl` and are run by
-`rebar3 device test` against the freshly preloaded `process-outbox@1.0`
-archive.

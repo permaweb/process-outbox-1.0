@@ -1,4 +1,4 @@
-{application, outbox_1_0,
+{application, process_outbox,
     [
         {description, "HyperBEAM process outbox device package"},
         {vsn, "0.1.0"},
