@@ -1,7 +1,84 @@
 %%% @doc AO-Core process outbox and subscription helper device.
 %%%
-%%% `process-outbox@1.0' appends outbound messages to `results/outbox` and can
-%%% notify subscribers registered under action/target pairs.
+%%% `process-outbox@1.0' gives an AO process a small, deterministic outbox
+%%% surface. It appends outbound messages to `results/outbox`, records listener
+%%% subscriptions under action/target pairs, and can fan out notification
+%%% messages to those listeners without requiring changes to HyperBEAM core
+%%% process devices.
+%%%
+%%% The device keeps all state in the message it is resolving:
+%%%
+%%% ```
+%%% results/outbox:
+%%%     Newest-first list of outbound messages. `send' prepends each submitted
+%%%     message, and subscriber notifications are also prepended as ordinary
+%%%     outbox entries.
+%%%
+%%% subscribers:
+%%%     Nested map of action -> target -> listener -> subscription-info.
+%%%     The default target is `broadcast'. `subscription-info' is the request's
+%%%     `slot' when present, otherwise the signed ID of the subscription
+%%%     request.
+%%% ```
+%%%
+%%% The public AO paths are:
+%%%
+%%% ```
+%%% send:
+%%%     messages?: Message | [Message]
+%%%     body?:     Message | [Message]  Used when `messages' is absent.
+%%%     x-*?:      Any request keys with the `x-' prefix are copied onto each
+%%%                sent message before it is written.
+%%%
+%%%     Appends the message or messages to `results/outbox'. If a sent message
+%%%     has an `action', subscribers for that action and its `target' receive
+%%%     `notify' messages. If no target is set, `broadcast' is used.
+%%%
+%%% notify:
+%%%     messages?: Message
+%%%     body?:     Message              Used when `messages' is absent.
+%%%
+%%%     Emits subscriber notifications for the message without first appending
+%%%     the original message. A message without `action' produces no notices.
+%%%
+%%% subscribe:
+%%%     body:
+%%%         subscribe-action: Action
+%%%         subscribe-target?: Target   Defaults to `broadcast'.
+%%%         from: Listener              Expected to be security-normalized by
+%%%                                     the caller/package before subscription.
+%%%     slot?: SubscriptionInfo
+%%%
+%%%     Registers `Listener' for `Action' and `Target'.
+%%%
+%%% unsubscribe:
+%%%     body:
+%%%         subscribe-action: Action
+%%%         subscribe-target?: Target   Defaults to `broadcast'.
+%%%         from: Listener
+%%%
+%%%     Removes `Listener' from the matching subscription bucket.
+%%%
+%%% subscribers:
+%%%     action:  Action
+%%%     target?: Target                 Defaults to `broadcast'.
+%%%
+%%%     Returns the list of listeners currently registered for the pair.
+%%% ```
+%%%
+%%% Notification messages are written to `results/outbox' as:
+%%%
+%%% ```
+%%% action: notify
+%%% target: Listener
+%%% x-*:    The uncommitted keys of the source message, normalized and prefixed
+%%%         with `x-'. For example, `action = "Debit-Notice"' becomes
+%%%         `x-action = "Debit-Notice"'.
+%%% ```
+%%%
+%%% Missing `send' or `notify' payloads return
+%%% `<<"Missing outbox request key.">>'. Missing subscription fields return the
+%%% explicit error messages used by the package test vectors.
 -module(dev_process_outbox).
 -include_lib("hb/include/hb.hrl").
 -include_lib("eunit/include/eunit.hrl").
