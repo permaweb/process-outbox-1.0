@@ -1,0 +1,13 @@
+_build/
+_checkouts/
+ebin/
+cache-*/
+debug/
+logs
+.eunit/
+*.beam
+*.crashdump
+erl_crash.dump
+rebar.lock
+hyperbeam-key.json
+wallet.json
