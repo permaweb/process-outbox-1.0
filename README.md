@@ -10,7 +10,12 @@ notifications to subscribers registered by action and target.
 
 ```
 device publish: process-outbox@1.0 
-spec=JrNExiF73kCs6hCyxLXB8BmPzegJUAsO5BBKaHxI3hQ impl=IgFctN6dNiwIoQrONi__4trJ70bkamBXXp9ipyW3SQI
+
+spec=JrNExiF73kCs6hCyxLXB8BmPzegJUAsO5BBKaHxI3hQ 
+
+impl=IgFctN6dNiwIoQrONi__4trJ70bkamBXXp9ipyW3SQI
+
+signer: vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0
 ```
 
 ## build
