@@ -8,14 +8,14 @@ notifications to subscribers registered by action and target.
 
 ## published package
 
-```
+```bash
 device publish: process-outbox@1.0 
 
-spec=JrNExiF73kCs6hCyxLXB8BmPzegJUAsO5BBKaHxI3hQ 
+spec=Oi9kpETC0JcNgb38Fn8W-lcRNXlp1USfcy2dHw3cmQ0 
 
-impl=IgFctN6dNiwIoQrONi__4trJ70bkamBXXp9ipyW3SQI
+impl=HOcPV7wxMHYb3rSQ3EfykQhHx_b8waRWhXolhcBNgHo 
 
-signer: vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0
+signer=vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0
 ```
 
 ## build
@@ -33,3 +33,6 @@ rebar3 device package
 HB_PORT=0 rebar3 device test
 rebar3 eunit-all
 ```
+
+## license
+this package is licensed under the [MIT License](./LICENSE)
